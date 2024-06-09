@@ -2,6 +2,7 @@
 from __init__ import CURSOR, CONN
 from department import Department
 
+
 class Employee:
 
     # Dictionary of objects saved to the database.
@@ -152,6 +153,7 @@ class Employee:
     @classmethod
     def get_all(cls):
         """Return a list containing one Employee object per table row"""
+        
         sql = """
             SELECT *
             FROM employees
@@ -187,4 +189,16 @@ class Employee:
 
     def reviews(self):
         """Return list of reviews associated with current employee"""
-        pass
+
+        from review import Review
+        
+        sql = """
+            SELECT * FROM reviews
+            WHERE employee_id = ?
+        """
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+        return [Review.instance_from_db(row) for row in rows]
+
+       
